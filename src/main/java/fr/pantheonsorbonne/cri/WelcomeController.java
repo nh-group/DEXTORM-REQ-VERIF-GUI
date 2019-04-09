@@ -13,6 +13,7 @@ public class WelcomeController {
 	@RequestMapping("/")
 	public String welcome(Map<String, Object> model) {
 		model.put("message", SpringBootWebApplication.req);
+		model.put("cpt", SpringBootWebApplication.req.size());
 		return "welcome";
 	}
 
