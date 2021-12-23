@@ -65,11 +65,17 @@
 			<version>4.3.1</version>
 		</dependency>
 
-				<dependency>
+		<dependency>
 			<groupId>io.grpc</groupId>
 			<artifactId>grpc-netty-shaded</artifactId>
 			<version>1.19.0</version>
 		</dependency>
+		
+<dependency>
+    <groupId>org.webjars</groupId>
+    <artifactId>jquery-ui</artifactId>
+    <version>1.12.1</version>
+</dependency>
 		<dependency>
 			<groupId>io.grpc</groupId>
 			<artifactId>grpc-protobuf</artifactId>
@@ -83,10 +89,49 @@
 		<dependency>
 			<groupId>javax.annotation</groupId>
 			<artifactId>javax.annotation-api</artifactId>
+		</dependency>
+		
+		
+		
 
+
+		<dependency>
+			<groupId>org.kohsuke</groupId>
+			<artifactId>github-api</artifactId>
+			<version>1.95</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
 
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>webjars-locator-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>sockjs-client</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>stomp-websocket</artifactId>
+			<version>2.3.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>octicons</artifactId>
+			<version>4.3.0</version>
+		</dependency>
 
 	</dependencies>
 	<build>
@@ -100,8 +145,8 @@
 
 		<plugins>
 			<!-- Package as an executable jar/war -->
-			
-						<plugin>
+
+			<plugin>
 				<groupId>org.xolstice.maven.plugins</groupId>
 				<artifactId>protobuf-maven-plugin</artifactId>
 				<version>0.6.1</version>
@@ -121,8 +166,8 @@
 					</execution>
 				</executions>
 			</plugin>
-			
-			
+
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -130,7 +175,7 @@
 
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
-			
+
 				<executions>
 					<execution>
 						<id>copy-resources</id>
