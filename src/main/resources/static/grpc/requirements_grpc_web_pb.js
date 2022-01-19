@@ -1,5 +1,5 @@
 /**
- * @fileoverview gRPC-Web generated client stub for requirements
+ * @fileoverview gRPC-Web generated client stub for fr.pantheonsorbonne.cri.requirements
  * @enhanceable
  * @public
  */
@@ -64,7 +64,7 @@ proto.requirements.ReqCollectorPromiseClient =
   options['format'] = 'text';
 
   /**
-   * @private @const {!proto.requirements.ReqCollectorClient} The delegate callback based client
+   * @private @const {!proto.fr.pantheonsorbonne.cri.requirements.ReqCollectorClient} The delegate callback based client
    */
   this.delegateClient_ = new proto.requirements.ReqCollectorClient(
       hostname, credentials, options);
@@ -98,7 +98,7 @@ const methodInfo_ReqCollector_pullRequirement = new grpc.web.AbstractClientBase.
 proto.requirements.ReqCollectorClient.prototype.pullRequirement =
     function(request, metadata) {
   return this.client_.serverStreaming(this.hostname_ +
-      '/requirements.ReqCollector/pullRequirement',
+      '/fr.pantheonsorbonne.cri.requirements.ReqCollector/pullRequirement',
       request,
       metadata,
       methodInfo_ReqCollector_pullRequirement);
@@ -115,7 +115,7 @@ proto.requirements.ReqCollectorClient.prototype.pullRequirement =
 proto.requirements.ReqCollectorPromiseClient.prototype.pullRequirement =
     function(request, metadata) {
   return this.delegateClient_.client_.serverStreaming(this.delegateClient_.hostname_ +
-      '/requirements.ReqCollector/pullRequirement',
+      '/fr.pantheonsorbonne.cri.requirements.ReqCollector/pullRequirement',
       request,
       metadata,
       methodInfo_ReqCollector_pullRequirement);
@@ -172,7 +172,7 @@ proto.requirements.AgentConfigurationPromiseClient =
   options['format'] = 'text';
 
   /**
-   * @private @const {!proto.requirements.AgentConfigurationClient} The delegate callback based client
+   * @private @const {!proto.fr.pantheonsorbonne.cri.requirements.AgentConfigurationClient} The delegate callback based client
    */
   this.delegateClient_ = new proto.requirements.AgentConfigurationClient(
       hostname, credentials, options);
@@ -209,7 +209,7 @@ const methodInfo_AgentConfiguration_pushAgentConfiguration = new grpc.web.Abstra
 proto.requirements.AgentConfigurationClient.prototype.pushAgentConfiguration =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/requirements.AgentConfiguration/pushAgentConfiguration',
+      '/fr.pantheonsorbonne.cri.requirements.AgentConfiguration/pushAgentConfiguration',
       request,
       metadata,
       methodInfo_AgentConfiguration_pushAgentConfiguration,

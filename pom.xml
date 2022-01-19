@@ -146,6 +146,9 @@
 		<plugins>
 			<!-- Package as an executable jar/war -->
 
+			
+			
+
 			<plugin>
 				<groupId>org.xolstice.maven.plugins</groupId>
 				<artifactId>protobuf-maven-plugin</artifactId>
@@ -163,6 +166,24 @@
 							<goal>compile</goal>
 							<goal>compile-custom</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.build.directory}/generated-sources/protobuf/java/</source>
+							</sources>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

@@ -5,19 +5,20 @@ import static io.grpc.stub.ClientCalls.asyncUnaryCall;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import fr.pantheonsorbonne.cri.requirements.Empty;
+import fr.pantheonsorbonne.cri.requirements.ReqCollectorGrpc;
+import fr.pantheonsorbonne.cri.requirements.Requirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import com.google.rpc.Status;
 
-import fr.pantheonsorbonne.cri.requirements.Empty;
-import fr.pantheonsorbonne.cri.requirements.ReqCollectorGrpc.ReqCollectorImplBase;
-import fr.pantheonsorbonne.cri.requirements.Requirement;
+
 import io.grpc.StatusRuntimeException;
 import io.grpc.netty.shaded.io.netty.util.internal.ConcurrentSet;
 import io.grpc.stub.StreamObserver;
 
-public class CollectorImpl extends ReqCollectorImplBase {
+public class CollectorImpl extends ReqCollectorGrpc.ReqCollectorImplBase {
 	
 	
 	public CollectorImpl(SimpMessagingTemplate template) {
