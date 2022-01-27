@@ -20,6 +20,7 @@ import io.grpc.ServerBuilder;
 public class SpringBootWebApplication extends SpringBootServletInitializer {
 
 	public static Deque<Requirement> req=new ConcurrentLinkedDeque<>();
+	public static String githubProjetName="";
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(SpringBootWebApplication.class);
@@ -28,10 +29,9 @@ public class SpringBootWebApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(SpringBootWebApplication.class, args);
 
-		Server server = ServerBuilder.forPort(8081).addService(new CollectorImpl() ).build();
-
-		server.start();
-		server.awaitTermination();
+		//Server server = ServerBuilder.forPort(8081).addService(new CollectorImpl(null) ).build();
+		//server.start();
+		//server.awaitTermination();
 	}
 
 }
