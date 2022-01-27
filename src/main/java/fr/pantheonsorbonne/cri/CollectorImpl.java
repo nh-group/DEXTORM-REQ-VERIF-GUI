@@ -15,7 +15,6 @@ import com.google.rpc.Status;
 
 
 import io.grpc.StatusRuntimeException;
-import io.grpc.netty.shaded.io.netty.util.internal.ConcurrentSet;
 import io.grpc.stub.StreamObserver;
 
 public class CollectorImpl extends ReqCollectorGrpc.ReqCollectorImplBase {
