@@ -18,36 +18,35 @@ import io.grpc.ServerBuilder;
 
 @Configuration
 public class ApplicationConfiguration {
+    Server server;
+    public ApplicationConfiguration() {
+        server = ServerBuilder.forPort(6081).addService(new CollectorImpl(template)).build();
 
-	@ApplicationScope
-	@Bean
-	public List<String> getRequirements() {
-		return new ArrayList<>();
-	}
 
-	@ApplicationScope
-	@Bean
-	@Autowired
-	public Server getGrPCServer(List<String> req, SimpMessagingTemplate template) {
-		Server server = ServerBuilder.forPort(8081).addService(new CollectorImpl(template)).build();
+    }
 
-		return server;
+    public SimpMessagingTemplate getTemplate() {
+        return template;
+    }
 
-	}
+    @Autowired
+    public void setTemplate(SimpMessagingTemplate template) {
+        this.template = template;
+    }
 
-	@Autowired
-	SimpMessagingTemplate template;
 
-	@PostConstruct
-	public void init() {
+    SimpMessagingTemplate template;
 
-		try {
-			getGrPCServer(this.getRequirements(), template).start();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    @PostConstruct
+    public void init() {
 
-	}
+        try {
+            server.start();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
 
 }
