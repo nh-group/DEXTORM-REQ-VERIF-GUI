@@ -42,7 +42,7 @@ public class CollectorImpl extends ReqCollectorGrpc.ReqCollectorImplBase {
 
 			@Override
 			public void onNext(Requirement value) {
-				if (SpringBootWebApplication.req.size() > 10) {
+				if (SpringBootWebApplication.req.size() > 5) {
 					SpringBootWebApplication.req.pop();
 				}
 				SpringBootWebApplication.req.addLast(value);

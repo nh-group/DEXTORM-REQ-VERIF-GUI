@@ -29,7 +29,7 @@ public class WelcomeController {
 		List<GHIssue> issues = new ArrayList<>();
 		try {
 			GitHub github = GitHub.connect();
-			GHRepository repo = github.getRepository("nh-group/basic-cli-uni/");
+			GHRepository repo = github.getRepository(System.getenv("REPO_URL"));
 
 			for (GHIssue issue : repo.getIssues(GHIssueState.ALL)) {
 				if (issue.getLabels().stream().map((GHLabel l) -> l.getName()).collect(Collectors.toList())
