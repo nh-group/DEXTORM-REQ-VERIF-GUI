@@ -1,1 +1,1 @@
-[{"comment":"Covered","type":"Global test plan","coverageMin":"10","coverageMax":"20"},{"comment":"Not Covered","type":"Indivual method","coverageMin":"40","coverageMax":"60"}]
+[{"comment":"Covered","type":"Global test plan","coverage": {"min":"10","max":"20"} },{"comment":"Not Covered","type":"Indivual method","coverage" : {"min":"40","max":"60"} }]

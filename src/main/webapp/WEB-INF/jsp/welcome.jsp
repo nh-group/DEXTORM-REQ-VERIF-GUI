@@ -21,16 +21,37 @@
 	<jsp:include page="menu.jsp" />
 	<div class="container mt-4 mb-4">
 		<div class="starter-template">
-			<div class="container mb-4">
+			<div class="container mb-4" id="testPlan">
 				<h1>Test Plan Progress</h1>
-				<button type="button" class="btn btn-light">
+				<button type="button" 
+						class="btn btn-primary"
+						id="buttonRunAllTest"
+						data-toggle="collapse"
+						data-target="#runAllTest"
+						aria-expanded="true" 
+						aria-controls="runAllTest">
 					Run all test cases
 				</button>
-				<div class="accordion" id="accordionExample">
+
+				<div id="runAllTest" 
+					class="card collapse mt-4"
+					data-parent="#testPlan">
+					<div class="card-body globalTestResult">
+						
+					</div>
+				</div>
+
+				<div class="accordion mt-4" id="accordionExample">
 					<c:forEach items="${issues}" var="issue" varStatus="loop">
 						<div class="card" id="issue${issue.getNumber()}" hits=0>
 							<div class="card-header disabled" id="heading${loop.index}">
-								<button type="button" class="btn btn-primary">
+								<button type="button" 
+										id="${issue.getNumber()}" 
+										class="runTestCase btn btn-primary"
+										data-toggle="collapse"
+										data-target="#runTest${loop.index}"
+										aria-expanded="true" 
+										aria-controls="runTest${loop.index}">
 									Run test case
 								</button>
 
@@ -72,6 +93,14 @@
 								data-parent="#accordionExample">
 								<div class="card-body">${issue.getBody()}</div>
 							</div>
+
+							<div id="runTest${loop.index}" 
+								class="collapse"
+								aria-labelledby="heading${loop.index}"
+								data-parent="#accordionExample">
+								<div class="card-body testResult-${issue.getNumber()}"></div>
+							</div>
+
 						</div>
 
 					</c:forEach>
@@ -88,6 +117,7 @@
 	<script src="/webjars/stomp-websocket/stomp.min.js"></script>
 	<script src="/js/app.js"></script>
 	<script type="text/javascript" src="js/main.js"></script>
+	<script type="text/javascript" src="js/coverageProgress.js"></script>
 	<script type="text/javascript">
 	$( "h1" ).progressbar({
 		  classes: {
@@ -96,6 +126,7 @@
 		  value: 0,
 		  max: ${issues.size()}
 		});
+
 	</script>
 
 </body>

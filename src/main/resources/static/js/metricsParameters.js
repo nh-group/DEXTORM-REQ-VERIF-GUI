@@ -18,13 +18,13 @@ function addRow(config) {
         <td>
             <input class="tabledit-input form-control input-sm fill" 
                     type="number" name="coverage-min" 
-                    value="`+config.coverageMin+`" 
+                    value="`+config.coverage.min+`" 
             >
         </td>
         <td>
             <input class="tabledit-input form-control input-sm fill" 
                     type="number" name="coverage-max" 
-                    value="`+config.coverageMax+`" 
+                    value="`+config.coverage.max+`" 
             >
         </td>
         <td>
@@ -61,8 +61,9 @@ $('#saveMetrics').click(function(){
         let rowConfig = {};
         rowConfig['comment'] = $(this).find('input[name="comment"]')[0].value;
         rowConfig['type'] = $(this).find('select[name="type"]')[0].value;
-        rowConfig['coverageMin'] = $(this).find('input[name="coverage-min"]')[0].value;
-        rowConfig['coverageMax'] = $(this).find('input[name="coverage-max"]')[0].value;
+        rowConfig['coverage'] = {};
+        rowConfig['coverage']['min'] = $(this).find('input[name="coverage-min"]')[0].value;
+        rowConfig['coverage']['max'] = $(this).find('input[name="coverage-max"]')[0].value;
 
         configs.push(rowConfig);
     });
