@@ -6,25 +6,25 @@ function addRow(config) {
             <input class="tabledit-input form-control input-sm" 
                     type="text" 
                     name="comment" 
-                    value="`+config.comment+`" 
+                    value="${config.comment}" 
             >
         </td>
         <td>
-            <select class="form-control" name="type" value="`+config.type+`">
-                <option `+((config.type === "Indivual method") ? "selected" : "")+`>Indivual method</option>
-                <option `+((config.type === "Global test plan") ? "selected" : "")+`>Global test plan</option>
+            <select class="form-control" name="type" value="${config.type}">
+                <option ${((config.type === "Use case") ? "selected" : "")}>Use case</option>
+                <option ${((config.type === "Global") ? "selected" : "")}>Global</option>
             </select>
         </td>
         <td>
             <input class="tabledit-input form-control input-sm fill" 
                     type="number" name="coverage-min" 
-                    value="`+config.coverage.min+`" 
+                    value="${config.coverage.min}" 
             >
         </td>
         <td>
             <input class="tabledit-input form-control input-sm fill" 
                     type="number" name="coverage-max" 
-                    value="`+config.coverage.max+`" 
+                    value="${config.coverage.max}" 
             >
         </td>
         <td>
@@ -36,7 +36,7 @@ function addRow(config) {
 }
 
 
-fetch("/metricsConfig.json")
+fetch("/metricsConfig.json", {cache: "no-store"})
     .then(response => response.json())
     .then(json => {
         console.log(json);
@@ -47,7 +47,7 @@ fetch("/metricsConfig.json")
     });
 
 $('button#addRow').click(function() {
-    addRow({comment:"", type:"Indivual method", coverage: 0});
+    addRow({comment:"", type:"Use case", coverage: {min: 0, max: 0}});
 });
 
 $(document).on('click', '.deleteRow', function (event) {
