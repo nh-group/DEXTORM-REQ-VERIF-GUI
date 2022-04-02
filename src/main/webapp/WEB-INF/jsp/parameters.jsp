@@ -54,6 +54,26 @@
                 </div>
             </div>
         </div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card p-4">
+                    <div class="card-header">
+						<div class="container">
+							<div class="row">
+								<h5>Repository</h5>
+							</div>
+						</div>
+					</div>
+					<div class="card-block mt-4">
+						<form class="form-inline" action="/parameters" method="GET">
+							<input type="text" class="form-control" name="githubRepoName" value="${githubRepoName}" />
+							<input type="submit" class="btn btn-primary ml-4" value="change repository"/>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		
     </div>
 	<script src="/webjars/jquery/jquery.min.js"></script>
 	<script src="/webjars/jquery-ui/1.12.1/jquery-ui.min.js"></script>

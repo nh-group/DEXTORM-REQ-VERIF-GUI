@@ -25,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.HtmlUtils;
 
@@ -32,17 +33,25 @@ import org.springframework.web.util.HtmlUtils;
 public class WelcomeController {
 
 	@RequestMapping("/")
-	public String welcome(Map<String, Object> model) {
+	public String welcome(Map<String, Object> model, @RequestParam(value = "githubRepoName", required = false) String githubRepoName) {
 		model.put("message", SpringBootWebApplication.req);
 		List<GHIssue> issues = new ArrayList<>();
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("/github_oauth.txt"));
 			GitHub github = new GitHubBuilder().withOAuthToken(br.readLine()).build();
-			GHRepository repo = github.getRepository("nh-group/basic-cli-uni/");
+			if(githubRepoName == null || githubRepoName.isEmpty()) {
+				githubRepoName = "nh-group/basic-cli-uni/";
+			}
+
+			GHRepository repo = github.getRepository(githubRepoName );
 
 			for (GHIssue issue : repo.getIssues(GHIssueState.ALL)) {
-				if (issue.getLabels().stream().map((GHLabel l) -> l.getName()).collect(Collectors.toList())
-						.contains("user stories")) {
+				if(repo.getFullName().equals("nh-group/basic-cli-uni") ) {
+					if (issue.getLabels().stream().map((GHLabel l) -> l.getName()).collect(Collectors.toList())
+							.contains("user stories")) {
+						issues.add(issue);
+					}
+				} else {
 					issues.add(issue);
 				}
 
@@ -51,6 +60,7 @@ public class WelcomeController {
 			issues.sort( (GHIssue i1,GHIssue i2) -> Integer.compare(i1.getNumber(),i2.getNumber() ));
 
 			model.put("issues", issues);
+			model.put("githubRepoName", repo.getFullName());
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -61,7 +71,13 @@ public class WelcomeController {
 	}
 
 	@RequestMapping("/parameters")
-	public String parameters(Map<String, Object> model) {
+	public String parameters(Map<String, Object> model, @RequestParam(value = "githubRepoName", required = false) String githubRepoName) {
+		if(githubRepoName == null || githubRepoName.isEmpty()) {
+			githubRepoName = "nh-group/basic-cli-uni/";
+		}
+
+		model.put("githubRepoName", githubRepoName);
+
 		return "parameters";
 	}
 
