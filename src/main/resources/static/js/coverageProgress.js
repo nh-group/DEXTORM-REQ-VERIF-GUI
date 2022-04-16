@@ -19,36 +19,38 @@ function getNewProgressBar(label, score) {
 }
 
 $('button.runTestCase').click(function(event) {
-    coverageResult  = {	
-        coverage : 70,
-        declineRate : 0,
-        weakSpots : {
-            method1 : 30,
-            method3: 20
+    fetch("http://localhost:3000/coverage/issue/all", {cache: "no-store"})
+    .then(response => response.json())
+    .then(allCoverageResult => {
+        let numberOfIssue = $(event.target).attr('id');
+        coverageResult = allCoverageResult.issues[numberOfIssue];
+        const testResultClass = ".testResult-"+numberOfIssue;
+
+        //if no coverage result for the issue we display a warning
+        if(!coverageResult) {
+            $(testResultClass).empty();
+            $(testResultClass).append(`<p><strong>No coverage result found for the issue ${numberOfIssue}</strong></p>`);
+            return;
         }
-    };
-    let numberOfIssue = $(event.target).attr('id');
-    const testResultClass = ".testResult-"+numberOfIssue;
-    $(testResultClass).empty();
+        
+        $(testResultClass).empty();
+        //display coverage results
+        $(testResultClass).append(getNewProgressBar("Use case coverage", coverageResult.coverage) );
+        $(testResultClass).append(getNewProgressBar("Decline rate", coverageResult.declineRate) );
+        $(testResultClass).append("<p><strong>Weak spots</strong></p>")
+        for (const [key, value] of Object.entries(coverageResult.weakSpots)) {
+            $(testResultClass).append(getNewProgressBar(key, value) );
+        }
 
-    //coverage of test case
-    $(testResultClass).append(getNewProgressBar("Use case coverage", coverageResult.coverage) );
-    //declining rate of test case
-    $(testResultClass).append(getNewProgressBar("Decline rate", coverageResult.declineRate) );
-    //weak spots
-    $(testResultClass).append("<p><strong>Weak spots</strong></p>")
-    for (const [key, value] of Object.entries(coverageResult.weakSpots)) {
-        $(testResultClass).append(getNewProgressBar(key, value) );
-    }
+        var useCaseCoverage = Number(coverageResult.coverage);
+        var commentToDisplay = "none";
+        useCaseMetrics.forEach(function(useCaseMetric) {
+            if(isCoverageInMetricInterval(useCaseCoverage, useCaseMetric) )
+                commentToDisplay = useCaseMetric.comment;
+        });
 
-    var useCaseCoverage = Number(coverageResult.coverage);
-    var commentToDisplay = "none";
-    useCaseMetrics.forEach(function(useCaseMetric) {
-        if(isCoverageInMetricInterval(useCaseCoverage, useCaseMetric) )
-            commentToDisplay = useCaseMetric.comment;
+        $(testResultClass).append(`<p><strong>Comment :</strong> ${commentToDisplay}</p>`);
     });
-
-    $(testResultClass).append(`<p><strong>Comment :</strong> ${commentToDisplay}</p>`);
 
 });
 
@@ -58,46 +60,31 @@ function isCoverageInMetricInterval(coverageScore, metric) {
 }
 
 $('button#buttonRunAllTest').click(function(event) {
-    coverageResult  = {
-        global : {
-            coverage : 65  
-        },      
-        issues : [
-            {
-            coverage : 70,
-            declineRate : 0
-            },
-            {
-            coverage : 60,
-            declineRate : 0
-            }
-        ]
-    }
+    fetch("http://localhost:3000/coverage/issue/all", {cache: "no-store"})
+    .then(response => response.json())
+    .then(coverageResult => {
+        console.log('coverageResult ',coverageResult);
+        $(".globalTestResult").empty();
+        $(".globalTestResult").append(getNewProgressBar("Global coverage", coverageResult.globalCoverage) );
 
-    $(".globalTestResult").empty();
-    $(".globalTestResult").append(getNewProgressBar("Global coverage", coverageResult.global.coverage) );
+        var globalCoverage = Number(coverageResult.globalCoverage);
+        var commentToDisplay = "none";
+        globalMetrics.forEach(function(globalMetric) {
+            if(isCoverageInMetricInterval(globalCoverage, globalMetric) )
+                commentToDisplay = globalMetric.comment;
+        });
 
-    var globalCoverage = Number(coverageResult.global.coverage);
-    var commentToDisplay = "none";
-    globalMetrics.forEach(function(globalMetric) {
-        if(isCoverageInMetricInterval(globalCoverage, globalMetric) )
-            commentToDisplay = globalMetric.comment;
+        $(".globalTestResult").append(`<p><strong>Comment :</strong> ${commentToDisplay}</p>`);
     });
-
-    $(".globalTestResult").append(`<p><strong>Comment :</strong> ${commentToDisplay}</p>`);
 });
 
-fetch("/metricsConfig.json", {cache: "no-store"})
+//retrieve all metrics when window is loaded
+fetch("http://localhost:3000/metrics/all", {cache: "no-store"})
 .then(response => response.json())
 .then(json => {
     console.log(json);
     var configs = json;
     
-    configs.forEach(function(config, index) {
-        if(config.type === 'Global') {
-            globalMetrics.push(config);
-        } else if(config.type === 'Use case') {
-            useCaseMetrics.push(config);
-        }
-    })    
+    globalMetrics = configs['Global'];
+    useCaseMetrics = configs['Use case']; 
 });

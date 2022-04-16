@@ -19,6 +19,10 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -27,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.HtmlUtils;
 
 @Controller
@@ -76,8 +81,16 @@ public class WelcomeController {
 			githubRepoName = "nh-group/basic-cli-uni/";
 		}
 
-		model.put("githubRepoName", githubRepoName);
+		//notify dextorm backend that the repo name has changed
+		String reqBody = "{\"name\": \""+githubRepoName+"\"}";
+		final String url = "http://localhost:3000/project/settings";
+		RestTemplate restTemplate = new RestTemplate();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> entity = new HttpEntity<String>(reqBody, headers);
+		restTemplate.postForLocation(url, entity);
 
+		model.put("githubRepoName", githubRepoName);
 		return "parameters";
 	}
 

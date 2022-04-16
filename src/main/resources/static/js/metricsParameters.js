@@ -36,14 +36,19 @@ function addRow(config) {
 }
 
 
-fetch("/metricsConfig.json", {cache: "no-store"})
+fetch("http://localhost:3000/metrics/all", {cache: "no-store"})
     .then(response => response.json())
     .then(json => {
         console.log(json);
         var configs = json;
-        configs.forEach(function(config, index) {
+
+        configs["Use case"].forEach(function(config, index) {
             addRow(config);
-        })    
+        })   
+        
+        configs["Global"].forEach(function(config, index) {
+            addRow(config);
+        })  
     });
 
 $('button#addRow').click(function() {
@@ -56,21 +61,28 @@ $(document).on('click', '.deleteRow', function (event) {
 });
 
 $('#saveMetrics').click(function(){
-    configs = [];
+    configs = { "Global": [], "Use case": [] };
     $('.rows').each(function( index ) {
+        let type =  $(this).find('select[name="type"]')[0].value;
+
         let rowConfig = {};
         rowConfig['comment'] = $(this).find('input[name="comment"]')[0].value;
-        rowConfig['type'] = $(this).find('select[name="type"]')[0].value;
+        rowConfig['type'] = type;
         rowConfig['coverage'] = {};
         rowConfig['coverage']['min'] = $(this).find('input[name="coverage-min"]')[0].value;
         rowConfig['coverage']['max'] = $(this).find('input[name="coverage-max"]')[0].value;
 
-        configs.push(rowConfig);
+
+        configs[type].push(rowConfig);
     });
 
-    fetch("/save-metrics",
+    fetch("http://localhost:3000/metrics/all",
     {
         method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify(configs)
     })
     .then(function(res){  })
