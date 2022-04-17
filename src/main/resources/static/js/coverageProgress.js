@@ -18,6 +18,48 @@ function getNewProgressBar(label, score) {
     `;
 }
 
+function displayCoverageResult(testResultClass, coverageResult, commentsToDisplay) {
+    $(testResultClass).append("<h3>Gumtree</h3>");
+    $(testResultClass).append(getNewProgressBar("line-based coverage", coverageResult.gumtree.lineCoverage) );
+    $(testResultClass).append(`<p><strong>Comment :</strong> ${commentsToDisplay.gumtree.line}</p><hr/>`);
+    $(testResultClass).append(getNewProgressBar("methods coverage", coverageResult.gumtree.methodCoverage) );
+    $(testResultClass).append(`<p><strong>Comment :</strong> ${commentsToDisplay.gumtree.method}</p><hr/>`);
+    $(testResultClass).append("<h3>Git blame</h3>");
+    $(testResultClass).append(getNewProgressBar("line-based coverage", coverageResult.gitblame.lineCoverage) );
+    $(testResultClass).append(`<p><strong>Comment :</strong> ${commentsToDisplay.gitblame.line}</p><hr/>`);
+    $(testResultClass).append(getNewProgressBar("methods coverage", coverageResult.gitblame.methodCoverage) );
+    $(testResultClass).append(`<p><strong>Comment :</strong> ${commentsToDisplay.gitblame.method}</p><hr/>`);
+    $(testResultClass).append("<h3>Coverage analytics</h3>");
+    $(testResultClass).append(getNewProgressBar("Decline rate", coverageResult.declineRate) );
+}
+
+function getCoverageComments(type) {
+    let commentsToDisplay = { gumtree : { line: "none", method :"none" }, gitblame : { line: "none", method :"none" } };
+    metrics = []
+
+    if(type === "use case")
+        metrics = useCaseMetrics;
+    
+    else if(type === "global")
+        metrics = globalMetrics;
+
+    metrics.forEach(function(metric) {
+        if(isCoverageInMetricInterval(coverageResult.gumtree.lineCoverage, metric) )
+            commentsToDisplay.gumtree.line = metric.comment;
+
+        if(isCoverageInMetricInterval(coverageResult.gumtree.methodCoverage, metric) )
+            commentsToDisplay.gumtree.method = metric.comment;
+    
+        if(isCoverageInMetricInterval(coverageResult.gitblame.lineCoverage, metric) )
+            commentsToDisplay.gitblame.line = metric.comment;
+
+        if(isCoverageInMetricInterval(coverageResult.gitblame.methodCoverage, metric) )
+            commentsToDisplay.gitblame.method = metric.comment;
+    });
+
+    return commentsToDisplay;
+}
+
 $('button.runTestCase').click(function(event) {
     fetch("http://localhost:3000/coverage/issue/all", {cache: "no-store"})
     .then(response => response.json())
@@ -34,22 +76,7 @@ $('button.runTestCase').click(function(event) {
         }
         
         $(testResultClass).empty();
-        //display coverage results
-        $(testResultClass).append(getNewProgressBar("Use case coverage", coverageResult.coverage) );
-        $(testResultClass).append(getNewProgressBar("Decline rate", coverageResult.declineRate) );
-        $(testResultClass).append("<p><strong>Weak spots</strong></p>")
-        for (const [key, value] of Object.entries(coverageResult.weakSpots)) {
-            $(testResultClass).append(getNewProgressBar(key, value) );
-        }
-
-        var useCaseCoverage = Number(coverageResult.coverage);
-        var commentToDisplay = "none";
-        useCaseMetrics.forEach(function(useCaseMetric) {
-            if(isCoverageInMetricInterval(useCaseCoverage, useCaseMetric) )
-                commentToDisplay = useCaseMetric.comment;
-        });
-
-        $(testResultClass).append(`<p><strong>Comment :</strong> ${commentToDisplay}</p>`);
+        displayCoverageResult(testResultClass, coverageResult, getCoverageComments("use case") );
     });
 
 });
@@ -62,19 +89,11 @@ function isCoverageInMetricInterval(coverageScore, metric) {
 $('button#buttonRunAllTest').click(function(event) {
     fetch("http://localhost:3000/coverage/issue/all", {cache: "no-store"})
     .then(response => response.json())
-    .then(coverageResult => {
+    .then(allCoverageResult => {
+        coverageResult = allCoverageResult.globalCoverage;
         console.log('coverageResult ',coverageResult);
         $(".globalTestResult").empty();
-        $(".globalTestResult").append(getNewProgressBar("Global coverage", coverageResult.globalCoverage) );
-
-        var globalCoverage = Number(coverageResult.globalCoverage);
-        var commentToDisplay = "none";
-        globalMetrics.forEach(function(globalMetric) {
-            if(isCoverageInMetricInterval(globalCoverage, globalMetric) )
-                commentToDisplay = globalMetric.comment;
-        });
-
-        $(".globalTestResult").append(`<p><strong>Comment :</strong> ${commentToDisplay}</p>`);
+        displayCoverageResult(".globalTestResult", coverageResult, getCoverageComments("global") );
     });
 });
 
