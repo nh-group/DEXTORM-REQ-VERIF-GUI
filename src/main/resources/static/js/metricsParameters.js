@@ -11,7 +11,7 @@ function addRow(config) {
         </td>
         <td>
             <select class="form-control" name="type" value="${config.type}">
-                <option ${((config.type === "Use case") ? "selected" : "")}>Use case</option>
+                <option ${((config.type === "User story") ? "selected" : "")}>User story</option>
                 <option ${((config.type === "Global") ? "selected" : "")}>Global</option>
             </select>
         </td>
@@ -42,7 +42,7 @@ fetch("http://localhost:3000/metrics/all", {cache: "no-store"})
         console.log(json);
         var configs = json;
 
-        configs["Use case"].forEach(function(config, index) {
+        configs["User story"].forEach(function(config, index) {
             addRow(config);
         })   
         
@@ -52,7 +52,7 @@ fetch("http://localhost:3000/metrics/all", {cache: "no-store"})
     });
 
 $('button#addRow').click(function() {
-    addRow({comment:"", type:"Use case", coverage: {min: 0, max: 0}});
+    addRow({comment:"", type:"User story", coverage: {min: 0, max: 0}});
 });
 
 $(document).on('click', '.deleteRow', function (event) {
@@ -61,7 +61,7 @@ $(document).on('click', '.deleteRow', function (event) {
 });
 
 $('#saveMetrics').click(function(){
-    configs = { "Global": [], "Use case": [] };
+    configs = { "Global": [], "User story": [] };
     $('.rows').each(function( index ) {
         let type =  $(this).find('select[name="type"]')[0].value;
 

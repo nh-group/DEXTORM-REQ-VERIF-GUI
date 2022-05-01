@@ -1,5 +1,5 @@
 var globalMetrics = [];
-var useCaseMetrics = [];
+var userStoriesMetrics = [];
 
 function getNewProgressBar(label, score) {
     return `
@@ -29,16 +29,14 @@ function displayCoverageResult(testResultClass, coverageResult, commentsToDispla
     $(testResultClass).append(`<p><strong>Comment :</strong> ${commentsToDisplay.gitblame.line}</p><hr/>`);
     $(testResultClass).append(getNewProgressBar("methods coverage", coverageResult.gitblame.methodCoverage) );
     $(testResultClass).append(`<p><strong>Comment :</strong> ${commentsToDisplay.gitblame.method}</p><hr/>`);
-    $(testResultClass).append("<h3>Coverage analytics</h3>");
-    $(testResultClass).append(getNewProgressBar("Decline rate", coverageResult.declineRate) );
 }
 
 function getCoverageComments(type) {
     let commentsToDisplay = { gumtree : { line: "none", method :"none" }, gitblame : { line: "none", method :"none" } };
     metrics = []
 
-    if(type === "use case")
-        metrics = useCaseMetrics;
+    if(type === "User story")
+        metrics = userStoriesMetrics;
     
     else if(type === "global")
         metrics = globalMetrics;
@@ -76,7 +74,7 @@ $('button.runTestCase').click(function(event) {
         }
         
         $(testResultClass).empty();
-        displayCoverageResult(testResultClass, coverageResult, getCoverageComments("use case") );
+        displayCoverageResult(testResultClass, coverageResult, getCoverageComments("User story") );
     });
 
 });
@@ -105,5 +103,5 @@ fetch("http://localhost:3000/metrics/all", {cache: "no-store"})
     var configs = json;
     
     globalMetrics = configs['Global'];
-    useCaseMetrics = configs['Use case']; 
+    userStoriesMetrics = configs['User story']; 
 });
