@@ -20,15 +20,42 @@ function getNewProgressBar(label, score) {
 
 function displayCoverageResult(testResultClass, coverageResult, commentsToDisplay) {
     $(testResultClass).append("<h3>Gumtree</h3>");
-    $(testResultClass).append(getNewProgressBar("line-based coverage", coverageResult.gumtree.lineCoverage) );
-    $(testResultClass).append(`<p><strong>Comment :</strong> ${commentsToDisplay.gumtree.line}</p><hr/>`);
-    $(testResultClass).append(getNewProgressBar("methods coverage", coverageResult.gumtree.methodCoverage) );
-    $(testResultClass).append(`<p><strong>Comment :</strong> ${commentsToDisplay.gumtree.method}</p><hr/>`);
+    $(testResultClass).append(`
+        <ul>
+            <li> ${getNewProgressBar("Line-based", coverageResult.gumtree.lineCoverage)} 
+                comment : ${commentsToDisplay.gumtree.line}
+            </li>
+            <br/>
+            <li> ${getNewProgressBar("Method-based", coverageResult.gumtree.methodCoverage)} 
+                comment : ${commentsToDisplay.gumtree.method}
+            </li>
+        </ul>
+    `);
     $(testResultClass).append("<h3>Git blame</h3>");
-    $(testResultClass).append(getNewProgressBar("line-based coverage", coverageResult.gitblame.lineCoverage) );
-    $(testResultClass).append(`<p><strong>Comment :</strong> ${commentsToDisplay.gitblame.line}</p><hr/>`);
-    $(testResultClass).append(getNewProgressBar("methods coverage", coverageResult.gitblame.methodCoverage) );
-    $(testResultClass).append(`<p><strong>Comment :</strong> ${commentsToDisplay.gitblame.method}</p><hr/>`);
+    $(testResultClass).append(`
+        <ul>
+            <li> ${getNewProgressBar("Line-based", coverageResult.gitblame.lineCoverage)} 
+                comment : ${commentsToDisplay.gitblame.line}
+            </li>
+            <br/>
+            <li> ${getNewProgressBar("Method-based", coverageResult.gitblame.methodCoverage)} 
+                comment : ${commentsToDisplay.gitblame.method}
+            </li>
+        </ul>
+    `);
+
+    //display delta rate if defined
+    if(coverageResult.deltaCoverage.gumtree && coverageResult.deltaCoverage.gitblame) {
+        $(testResultClass).append(`<h3>Delta rates</h3>`);
+        $(testResultClass).append(`
+            <ul>
+                <li>Gumtree line-based approach : ${coverageResult.deltaCoverage.gumtree.lineCoverage}</li>
+                <li>Gumtree method-based approach : ${coverageResult.deltaCoverage.gumtree.methodCoverage}</li>
+                <li>Git blame line-based approach : ${coverageResult.deltaCoverage.gitblame.lineCoverage}</li>
+                <li>Git blame method-based approach : ${coverageResult.deltaCoverage.gitblame.methodCoverage}</li>
+            </ul>
+        `);
+    }
 }
 
 function getCoverageComments(type) {
@@ -89,7 +116,7 @@ $('button#buttonRunAllTest').click(function(event) {
     .then(response => response.json())
     .then(allCoverageResult => {
         coverageResult = allCoverageResult.globalCoverage;
-        console.log('coverageResult ',coverageResult);
+        coverageResult['deltaCoverage'] = allCoverageResult.deltaCoverage;
         $(".globalTestResult").empty();
         displayCoverageResult(".globalTestResult", coverageResult, getCoverageComments("global") );
     });
@@ -99,8 +126,7 @@ $('button#buttonRunAllTest').click(function(event) {
 fetch("http://localhost:3000/metrics/all", {cache: "no-store"})
 .then(response => response.json())
 .then(json => {
-    console.log(json);
-    var configs = json;
+    let configs = json;
     
     globalMetrics = configs['Global'];
     userStoriesMetrics = configs['User story']; 
