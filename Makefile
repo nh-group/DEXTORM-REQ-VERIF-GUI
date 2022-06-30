@@ -6,16 +6,16 @@ build:
 	mvn  package
 	
 build-docker: 
-	docker build . -t nherbaut/dextorm-gamified-gui
+	docker build . -t nherbaut/dextorm-gui
 
 clean:
 	mvn clean
 
 clean-docker: 
-	docker rmi -f nherbaut/dextorm-gamified-gui
+	docker rmi -f nherbaut/dextorm-gui
 
 run:
-	docker run -e GITHUB_OAUTH=${GITHUB_OAUTH} -e REPO_URL=${REPO_URL} -p 8080:8080 -p 8081:8081 nherbaut/dextorm-gamified-gui
+	docker run -p 8080:8080  nherbaut/dextorm-gui
 
 push-docker:
-	docker push nherbaut/dextorm-gamified-gui
+	docker push nherbaut/dextorm-gui
